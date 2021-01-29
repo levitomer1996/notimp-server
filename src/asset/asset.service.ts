@@ -5,6 +5,7 @@ import { AppGateWay } from '../app.gateway';
 import { User } from '../auth/user.schema';
 import { ImageApi } from '../image/Image.model';
 import { Asset } from './asset.schema';
+import { NewRateDTO } from './DTO/NewRate.dto';
 
 @Injectable()
 export class AssetService {
@@ -20,7 +21,7 @@ export class AssetService {
   async newAsset(newAsset: Asset) {
     this.logger.log(newAsset);
     this.logger.log('Creating new asset...');
-    newAsset.rate = { uid: newAsset.uid, rate_number: 0 };
+    newAsset.rate = [];
     newAsset.time_Posted = Date.now();
 
     const asset = new this.assetModel(newAsset);
@@ -65,5 +66,19 @@ export class AssetService {
   async findAssetByTitle(title: string): Promise<Asset[]> {
     const assetList = await this.assetModel.find({ title: { $regex: title } });
     return assetList;
+  }
+  async updateRate(body: NewRateDTO) {
+    const { rate_number, uid, assetId } = body;
+    try {
+      this.logger.log('Searching for asset');
+      const foundRates = await this.assetModel.findById(assetId);
+      this.logger.log('Found asset. attempting update.');
+      const newRatesList = [...foundRates.rate, { rate_number, uid }];
+      await this.assetModel.findOneAndUpdate(
+        { _id: assetId },
+        { rate: newRatesList },
+      );
+      this.logger.log('Asset rate was update');
+    } catch (error) {}
   }
 }

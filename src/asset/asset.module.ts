@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from '@nestjs/passport';
 import { MulterModule } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { AppGateWay } from '../app.gateway';
+import { JwtStrategy } from '../auth/jwt.strategy';
 import { User, UserSchema } from '../auth/user.schema';
 import { ImageApi, ImageApiSchema } from '../image/Image.model';
 import { AssetController } from './asset.controller';
@@ -33,6 +36,13 @@ const imageFilter = function(req, file, cb) {
       useFactory: () => ({
         fileFilter: imageFilter,
       }),
+    }),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: 'tomer',
+      signOptions: {
+        expiresIn: 3600,
+      },
     }),
   ],
   controllers: [AssetController],

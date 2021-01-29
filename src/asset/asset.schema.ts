@@ -19,7 +19,7 @@ export class Asset extends Document {
   @Prop({ required: true })
   owner: string;
   @Prop({ required: true })
-  rate: Rate;
+  rate: Rate[];
   @Prop({ required: true })
   title: string;
   @Prop({ required: true })

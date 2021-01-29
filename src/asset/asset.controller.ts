@@ -5,10 +5,13 @@ import {
   Logger,
   Param,
   Post,
-  UploadedFile,
-  UseInterceptors,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
+
+import { GetUser } from '../auth/get-user.decorator';
 import { Asset } from './asset.schema';
 import { AssetService } from './asset.service';
 
@@ -38,5 +41,17 @@ export class AssetController {
   async findAsset(@Body() body): Promise<Asset[]> {
     const { title } = body;
     return this.assetService.findAssetByTitle(title);
+  }
+  @Post('updaterate')
+  @UseGuards(AuthGuard())
+  @UsePipes(ValidationPipe)
+  updateRate(@GetUser() user, @Body() body) {
+    console.log(user);
+    const { assetId, rate_number } = body;
+    return this.assetService.updateRate({
+      assetId,
+      rate_number,
+      uid: user._id,
+    });
   }
 }
