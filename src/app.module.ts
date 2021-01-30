@@ -7,6 +7,7 @@ import { AssetModule } from './asset/asset.module';
 import { AppGateWay } from './app.gateway';
 import { FileModule } from './file/file.module';
 import { ImageModule } from './image/image.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ImageModule } from './image/image.module';
     AssetModule,
     FileModule,
     ImageModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateWay],
