@@ -14,13 +14,11 @@ export class AuthController {
   }
   @Post('signin')
   signin(@Body() body) {
-    const { signin_type } = body;
+    const { signin_type, uid } = body;
     switch (signin_type) {
       case SigninType.DEFAULT:
-        const { email, password } = body;
-        return this.authService.default_signin({ email, password });
+        return this.authService.default_signin(uid);
       case SigninType.GOOGLE:
-        const { uid } = body;
         return this.authService.google_signin(uid);
       default:
         break;

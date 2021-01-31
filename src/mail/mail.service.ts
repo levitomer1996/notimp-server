@@ -23,11 +23,18 @@ export class MailService {
       throw new Error('Something went wrong');
     }
   }
-  async getUserMail(id): Promise<Mail[]> {
+  async getUserMail(id: string): Promise<Mail[]> {
     try {
-      const list = await this.mailModel.find({ reciver: id });
-      console.log(list);
+      const list = await this.mailModel.find({ reciver: id, isReaded: false });
+
       return list;
+    } catch (error) {
+      throw new Error('Something went wrong');
+    }
+  }
+  async updateIsReaded(mailId: string) {
+    try {
+      await this.mailModel.findByIdAndUpdate(mailId, { isReaded: true });
     } catch (error) {
       throw new Error('Something went wrong');
     }

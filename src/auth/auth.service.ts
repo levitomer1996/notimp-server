@@ -43,8 +43,9 @@ export class AuthService {
     return accessToken;
   }
 
-  async default_signin(credentials: DefaultSignInCredentials) {
-    const foundUser = await this.userModel.findOne(credentials);
+  async default_signin(uid: DefaultSignInCredentials) {
+    const foundUser = await this.userModel.findById(uid);
+    console.log(foundUser);
     if (!foundUser) {
       throw new BadRequestException();
     }
