@@ -28,9 +28,12 @@ export class AssetController {
   getAssets(): Promise<Asset[]> {
     return this.assetService.getAssets();
   }
-  @Get(':id')
-  getUserAssets(@Param('id') id: string): Promise<Asset[]> {
-    return this.assetService.getUserAssets(id);
+  @Get('userassets')
+  @UseGuards(AuthGuard())
+  @UsePipes(ValidationPipe)
+  getUserAssets(@GetUser() user): Promise<Asset[]> {
+    const { _id } = user;
+    return this.assetService.getUserAssets(_id);
   }
 
   @Get('getasset/:id')
